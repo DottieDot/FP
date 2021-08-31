@@ -47,6 +47,7 @@ decodeString str code =
 
 -- MAIN
 
+main: Program () Model Msg
 main =
   Browser.sandbox {
     init = init,
