@@ -1,4 +1,4 @@
-# Caesar Encryption Week 1
+# Pythagoras Triple Week 1
 
 ## Testing
 ### Dependencies
