@@ -43,10 +43,9 @@ encodeString str code =
 
 decodeString: String -> Int -> String
 decodeString str code =
-  String.map (\char -> decodeChar char code) str
+  encodeString str -code
 
 -- MAIN
-
 main: Program () Model Msg
 main =
   Browser.sandbox {
