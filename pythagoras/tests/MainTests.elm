@@ -1,8 +1,12 @@
-module MainTests exposing (leg1Tests, leg2Tests, hypTests, isPythTrippleTests, sqrTests, pythTripleTests)
+module MainTests exposing (leg1Tests, leg2Tests, hypTests, isPythTrippleTests, sqrTests, pythTripleTests, pythTripleMapTests, pythTripleRecTests, arePythTripleFilterTests, arePythTripleRecTests)
 
 import Expect exposing (Expectation)
 import Test exposing (..)
 import Main exposing (leg1, leg2, hyp, isPythTripple, sqr, pythTriple)
+import Main exposing (pythTripleMap)
+import Main exposing (pythTripleRec)
+import Main exposing (arePythTripleFilter)
+import Main exposing (arePythTripleRec)
 
 leg1Tests: Test
 leg1Tests = 
@@ -52,9 +56,9 @@ isPythTrippleTests: Test
 isPythTrippleTests = 
   describe "isTriple" [
     test "isTriple 9 40 41 = True"
-      (\_ -> Expect.equal True (isPythTripple 9 40 41)),
+      (\_ -> Expect.equal True (isPythTripple (9, 40, 41))),
     test "isTriple 3 4 5 = True"
-      (\_ -> Expect.equal True (isPythTripple 3 4 5))
+      (\_ -> Expect.equal True (isPythTripple (3, 4, 5)))
       
   ]
 
@@ -67,4 +71,48 @@ sqrTests =
       (\_ -> Expect.equal 0 (sqr 0)),
     test "sqr -2 = 4"
       (\_ -> Expect.equal 4 (sqr -2))
+  ]
+
+pythTripleMapTests: Test
+pythTripleMapTests =
+  describe "pythTripleMap" [
+    test "pythTripleMap [] = []"
+      (\_ -> Expect.equal [] (pythTripleMap [])),
+    test "pythTripleMap [(2, 1)] = [Just(3, 4, 5)]"
+      (\_ -> Expect.equal [Just(3, 4, 5)] (pythTripleMap [(2, 1)])),
+    test "pythTripleMap [(2, 1), (1, 2)] = [Just(3, 4, 5), Nothing]"
+      (\_ -> Expect.equal [Just(3, 4, 5), Nothing] (pythTripleMap [(2, 1), (1, 2)]))
+  ]
+
+pythTripleRecTests: Test
+pythTripleRecTests =
+  describe "pythTripleRec" [
+    test "pythTripleRec [] = []"
+      (\_ -> Expect.equal [] (pythTripleRec [])),
+    test "pythTripleRec [(2, 1)] = [Just(3, 4, 5)]"
+      (\_ -> Expect.equal [] (pythTripleRec [])),
+    test "pythTripleRec [(2, 1), (1, 2)] = [Just(3, 4, 5), Nothing]"
+      (\_ -> Expect.equal [] (pythTripleRec []))
+  ]
+
+arePythTripleFilterTests: Test
+arePythTripleFilterTests =
+  describe "arePythTripleFilter" [
+    test "arePythTripleFilter [] = []"
+      (\_ -> Expect.equal [] (arePythTripleFilter [])),
+    test "arePythTripleFilter [(3, 4, 5)] = [(3, 4, 5)]"
+      (\_ -> Expect.equal [(3, 4, 5)] (arePythTripleFilter [(3, 4, 5)])),
+    test "arePythTripleFilter [(3, 4, 5), (1, 2, 3)] = [(3, 4, 5)]"
+      (\_ -> Expect.equal [(3, 4, 5)] (arePythTripleFilter [(3, 4, 5), (1, 2, 3)]))
+  ]
+
+arePythTripleRecTests: Test
+arePythTripleRecTests =
+  describe "arePythTripleRec" [
+    test "arePythTripleRec [] = []"
+      (\_ -> Expect.equal [] (arePythTripleRec [])),
+    test "arePythTripleRec [(3, 4, 5)] = [(3, 4, 5)]"
+      (\_ -> Expect.equal [(3, 4, 5)] (arePythTripleRec [(3, 4, 5)])),
+    test "arePythTripleRec [(3, 4, 5), (1, 2, 3)] = [(3, 4, 5)]"
+      (\_ -> Expect.equal [(3, 4, 5)] (arePythTripleRec [(3, 4, 5), (1, 2, 3)]))
   ]

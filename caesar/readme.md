@@ -1,4 +1,4 @@
-# Caesar Encryption Week 1
+# Caesar Encryption Week 2
 
 ## Description
 The caesar encryption works by advancing letters by `n` places, with `n` being the key.
@@ -21,10 +21,10 @@ elm-test
 ```
 
 ## Screenshots
-### Encoding
-![](./screenshots/encode.png)
-### Decoding
-![](./screenshots/decode.png)
+### Encrypting
+![](./screenshots/encrypt.png)
+### Decrypting
+![](./screenshots/decrypt.png)
 ### Tests
 ![](./screenshots/tests.png)
 

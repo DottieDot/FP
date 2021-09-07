@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, input, text, div, br, span)
+import Html exposing (Html, input, text, div, br, span, hr)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
@@ -19,8 +19,8 @@ alphabetIndexToChar alphabetIndex upperCase =
   else
     Char.fromCode (alphabetIndex + 97)
 
-encodeChar: Char -> Int -> Char
-encodeChar char code =
+encryptChar: Char -> Int -> Char
+encryptChar char code =
   if Char.isAlpha char then
     let
       alphabetIndex = charToAlphabetIndex char
@@ -33,17 +33,46 @@ encodeChar char code =
   else
     char
 
-decodeChar: Char -> Int -> Char
-decodeChar char code =
-  encodeChar char -code
+decryptChar: Char -> Int -> Char
+decryptChar char code =
+  encryptChar char -code
 
-encodeString: String -> Int -> String
-encodeString str code =
-  String.map (\char -> encodeChar char code) str
+filterString: (Char -> Bool) -> String -> String
+filterString fn str =
+  case String.uncons str of
+    Nothing -> str
+    Just(head, tail) ->
+      if fn head then
+        String.cons head (filterString fn tail)
+      else
+        filterString fn tail
 
-decodeString: String -> Int -> String
-decodeString str code =
-  encodeString str -code
+normalizeString: String -> String
+normalizeString str =
+  String.filter (\char -> Char.isAlpha char) str
+
+mapString: (Char -> Char) -> String -> String
+mapString fn str =
+  case String.uncons str of
+    Nothing -> str
+    Just(head, tail) ->
+      String.cons (fn head) (mapString fn tail)
+
+encryptString: String -> Int -> String
+encryptString str code =
+  mapString (\char -> encryptChar char code) str
+
+decryptString: String -> Int -> String
+decryptString str code =
+  encryptString str -code
+
+encryptNormalizedString: String -> Int -> String
+encryptNormalizedString str code =
+  encryptString (normalizeString str) code
+
+decryptNormalizedString: String -> Int -> String
+decryptNormalizedString str code =
+  decryptString (normalizeString str) code
 
 -- MAIN
 main: Program () Model Msg
@@ -104,13 +133,24 @@ view model =
     ] [],
     div [] [
       span[] [ 
-        text "Encoded:",
-        text (encodeString model.message model.code) 
+        text "encrypted:",
+        text (encryptString model.message model.code) 
       ],
       br[] [],
       span[] [ 
-        text "Decoded:",
-        text (decodeString model.message model.code)
+        text "decrypted:",
+        text (decryptString model.message model.code)
+      ],
+      br[] [],
+      hr[] [],
+      span[] [ 
+        text "normalized encrypted:",
+        text (encryptNormalizedString model.message model.code) 
+      ],
+      br[] [],
+      span[] [ 
+        text "normalized decrypted:",
+        text (decryptNormalizedString model.message model.code)
       ]
     ]
   ]

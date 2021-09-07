@@ -1,4 +1,4 @@
-# Pythagoras Triple Week 1
+# Pythagoras Triple Week 2
 
 ## Testing
 ### Dependencies
