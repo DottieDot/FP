@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, input, text, div, br, span, hr)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
+import Debug exposing (toString)
 
 charToAlphabetIndex: Char -> Int
 charToAlphabetIndex char =
@@ -74,6 +75,36 @@ decryptNormalizedString: String -> Int -> String
 decryptNormalizedString str code =
   decryptString (normalizeString str) code
 
+stringStartsWith: String -> String -> Bool
+stringStartsWith substr str =
+  case String.uncons substr of
+    Nothing -> True
+    Just(h1, t1) -> 
+      case String.uncons str of
+        Nothing -> False
+        Just(h2, t2) ->
+          h1 == h2 && stringStartsWith t1 t2
+
+stringContains: String -> String -> Bool
+stringContains substr str = 
+  if stringStartsWith substr str then
+    True
+  else
+    case String.uncons str of
+      Nothing -> False
+      Just(_, tail) ->
+        stringContains substr tail
+
+stringContainsList: List String -> String -> Bool
+stringContainsList list str =
+  List.any (\item -> stringContains item str) list
+
+candidates: List String -> String -> List (Int, String)
+candidates keywords encrypted =
+  List.range 0 25
+    |> List.map (\i -> (i, decryptNormalizedString encrypted i))
+    |> List.filter (\(_, decrypted) -> stringContainsList keywords decrypted)
+
 -- MAIN
 main: Program () Model Msg
 main =
@@ -87,20 +118,23 @@ main =
 type alias Model = 
   {
     message: String,
-    code: Int
+    code: Int,
+    keywords: String
   }
 
 init: Model
 init = 
   {
     message = "",
-    code = 0
+    code = 0,
+    keywords = ""
   }
 
 -- UPDATE
 type Msg
   = ChangeMessageText String
   | ChangeCode String
+  | ChangeKeywords String
 
 update: Msg -> Model -> Model
 update msg model =
@@ -115,21 +149,34 @@ update msg model =
         model |
         code = Maybe.withDefault 0 (String.toInt newCode)
       }
+    ChangeKeywords keywords ->
+      {
+        model |
+        keywords = keywords
+      }
 
 -- VIEW
 view: Model -> Html Msg
 view model =
   div [] [
+    text "Message: ",
     input [
       placeholder "Message",
       value model.message,
       onInput ChangeMessageText
     ] [],
+    text "Code: ",
     input [
       placeholder "Code",
       type_ "number",
       value (String.fromInt model.code),
       onInput ChangeCode
+    ] [],
+    text "Keywords: ",
+    input [
+      placeholder "Keywords (comma seperated)",
+      value model.keywords,
+      onInput ChangeKeywords
     ] [],
     div [] [
       span[] [ 
@@ -151,6 +198,11 @@ view model =
       span[] [ 
         text "normalized decrypted:",
         text (decryptNormalizedString model.message model.code)
-      ]
+      ],
+      br[] [],
+      hr[] [],
+      text "candidated:",
+      br[] [],
+      text (toString (candidates (String.split "," model.keywords) model.message))
     ]
   ]

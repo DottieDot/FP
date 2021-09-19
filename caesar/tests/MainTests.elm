@@ -1,4 +1,4 @@
-module MainTests exposing (encryptCharTests, decryptCharTests, encryptStringTests, decryptStringTests, charToAlphabetIndexTests, alphabetIndexToCharTests, mapStringTests, filterStringTests, encryptNormalizedStringTests, decryptNormalizedStringTests)
+module MainTests exposing (encryptCharTests, decryptCharTests, encryptStringTests, decryptStringTests, charToAlphabetIndexTests, alphabetIndexToCharTests, mapStringTests, filterStringTests, encryptNormalizedStringTests, decryptNormalizedStringTests, stringStartsWithTests, stringContainsTests, stringContainsListTests, candidatesTests)
 
 import Main exposing (encryptChar, decryptChar, encryptString, decryptString)
 import Test exposing (..)
@@ -10,6 +10,10 @@ import Main exposing (mapString)
 import Main exposing (filterString)
 import Main exposing (decryptNormalizedString)
 import Main exposing (encryptNormalizedString)
+import Main exposing (stringStartsWith)
+import Main exposing (stringContains)
+import Main exposing (stringContainsList)
+import Main exposing (candidates)
 
 encryptCharTests: Test
 encryptCharTests =
@@ -141,4 +145,41 @@ decryptNormalizedStringTests =
       (\_ -> Expect.equal "" (decryptNormalizedString "1 *()" 5)),
     test "wraps around"
       (\_ -> Expect.equal "test" (decryptNormalizedString "test" 26))
+  ]
+
+stringStartsWithTests: Test
+stringStartsWithTests =
+  describe "stringStartsWith" [
+    test "stringStatsWith 'Te' 'Test' = True"
+      (\_ -> Expect.equal True (stringStartsWith "Te" "Test")),
+    test "stringStatsWith 'est' 'Test' = False"
+      (\_ -> Expect.equal False (stringStartsWith "est" "Test"))
+  ]
+
+stringContainsTests: Test
+stringContainsTests =
+
+  describe "stringContains" [
+    test "stringContains 'Te' 'Test' = True"
+      (\_ -> Expect.equal True (stringContains "Te" "Test")),
+    test "stringContains 'est' 'Test' = True"
+      (\_ -> Expect.equal True (stringContains "est" "Test")),
+    test "stringContains 'test' 'Test' = False"
+      (\_ -> Expect.equal False (stringContains "test" "Test"))
+  ]
+
+stringContainsListTests: Test
+stringContainsListTests =
+  describe "stringContainsListTests" [
+    test "stringContainsListTests ['Univ', 'tys'] 'FontysUniversity' = True"
+      (\_ -> Expect.equal True (stringContainsList ["Univ","tys"] "FontysUniversity")),
+    test "stringContainsListTests ['fontys', 'city'] 'FontysUniversity' = False"
+      (\_ -> Expect.equal False (stringContainsList ["fontys","city"] "FontysUniversity"))
+  ]
+
+candidatesTests: Test
+candidatesTests =
+  describe "candidates" [
+    test "candidates ['THE', 'AND'] 'DGGADBCOOCZYMJHZYVMTOJOCZHVS'"
+      (\_ -> Expect.equal [(5, "YBBVYWXJJXUTHECUTQHOJEJXUCQN"), (14,"PSSMPNOAAOLKYVTLKHYFAVAOLTHE"), (21,"ILLFIGHTTHEDROMEDARYTOTHEMAX")] (candidates ["THE", "AND"] "DGGADBCOOCZYMJHZYVMTOJOCZHVS"))
   ]
