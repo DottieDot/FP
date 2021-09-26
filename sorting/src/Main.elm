@@ -1,5 +1,5 @@
 module Main exposing (..)
-import Html exposing (text)
+import Html exposing (text, div, br)
 import Debug exposing (toString)
 
 halve: List a -> (List a, List a)
@@ -37,4 +37,13 @@ mergeSort list =
     (l, r) ->
       merge (mergeSort l) (mergeSort r)
 
-main = text (toString (mergeSort [4,6,1,5,9]))
+--------------------------
+
+toSort : List Int
+toSort = [4,6,1,5,9]
+
+main = div []
+  [ text ("To sort: " ++ toString toSort)
+  , br [] []
+  , text ("Sorted : " ++ toString (mergeSort toSort))
+  ]
