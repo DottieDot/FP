@@ -31,9 +31,9 @@ switcherooTests : Test
 switcherooTests =
   describe "switcheroo" [
     test "switcheroo (Impl (Cons True) (Cons False))) = (Or (Cons True) (Not (Cons False))"
-      (\_ -> Expect.equal (Or (Cons True) (Not (Cons False))) (switcheroo (Impl (Cons True) (Cons False)))),
+      (\_ -> Expect.equal (Or (Cons False) (Not (Cons True))) (switcheroo (Impl (Cons True) (Cons False)))),
     test "switcheroo (Bi (Cons True) (Cons False))) = (Or (Cons True) (Not (Cons False))"
-      (\_ -> Expect.equal (And (Or (Cons True) (Not (Cons False))) (Or (Cons False) (Not (Cons True)))) (switcheroo (Bi (Cons True) (Cons False))))
+      (\_ -> Expect.equal (And (Or (Cons False) (Not (Cons True))) (Or (Cons True) (Not (Cons False)))) (switcheroo (Bi (Cons True) (Cons False))))
   ]
 
 evalPropositionTests : Test
@@ -51,8 +51,17 @@ evalPropositionTests =
       (\_ -> Expect.equal True (evalProposition Dict.empty (And (Cons True) (Cons True)))),
     test "evalProposition Dict.empty (Or (Cons True) (Cons True)) = True"
       (\_ -> Expect.equal True (evalProposition Dict.empty (Or (Cons True) (Cons True)))),
-    test "evalProposition Dict.empty (Impl (Cons True) (Cons False)) = True"
-      (\_ -> Expect.equal True (evalProposition Dict.empty ((Impl (Cons True) (Cons False))))),
+    test "evalProposition Dict.empty (Impl (Cons False) (Cons True)) = True"
+      (\_ -> Expect.equal True (evalProposition Dict.empty ((Impl (Cons False) (Cons True))))),
     test "evalProposition Dict.empty (Bi (Cons False) (Cons True)) = False"
       (\_ -> Expect.equal False (evalProposition Dict.empty ((Bi (Cons False) (Cons True)))))
+  ]
+
+deDeMorganTests : Test
+deDeMorganTests =
+  describe "deDeMorgan" [
+    test "deDeMorgan Or (Not (Cons True)) (Not (Cons True)) = Not (And (Cons True) (Cons True))"
+      (\_ -> Expect.equal (Not (And (Cons True) (Cons True))) (deDeMorgan (Or (Not (Cons True)) (Not (Cons True))))),
+          test "deDeMorgan And (Not (Cons True)) (Not (Cons True)) = Not (Or (Cons True) (Cons True))"
+      (\_ -> Expect.equal (Not (Or (Cons True) (Cons True))) (deDeMorgan (And (Not (Cons True)) (Not (Cons True)))))
   ]

@@ -1,4 +1,4 @@
-# Propositions week 5
+# High order functions week 5
 
 ## Testing
 ### Dependencies
